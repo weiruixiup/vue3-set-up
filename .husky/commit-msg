@@ -1,25 +1,39 @@
 #!/bin/sh
 
-# 用 `` 可以将命令的输出结果赋值给变量
-# 获取当前提交的 commit msg
-commit_msg=`cat $1`
+# Get the commit message
+commit_msg=$(cat "$1")
 
-msg_re="^(feat|fix|docs|style|refactor|perf|test|workflow|build|ci|chore|release|workflow)(\(.+\))?:.{1,100}"
+# Define the commit message regex for valid types and format
+msg_re="^(feat|fix|docs|style|refactor|perf|test|workflow|build|ci|chore|release|workflow)(\(.+\))?: .{1,100}"
 
-if [[ ! $commit_msg =~ $msg_re ]]
-then
-	echo "不合法的 commit 消息提交格式，请使用正确的格式:"
-	echo ""
-	echo "feat        新功能（feature）"
-	echo "fix         修补bug"
-	echo "docs        文档（新增or修改）"
-	echo "style       格式（不影响代码运行的变动）"
-	echo "refactor    重构（即不是新增功能，也不是修改bug的代码变动）"
-	echo "perf        性能优化"
-	echo "test        增加测试"
-	echo "chore       构建过程或辅助工具的变动"
-	echo ""
-	echo "详情请查看 git commit 提交规范：https://github.com/woai3c/Front-end-articles/blob/master/git%20commit%20style.md"
-	# 异常退出
-	exit 1
+# Print the current commit message
+echo "Current commit message: \"$commit_msg\""
+
+# Check the length of the commit message
+if [ ${#commit_msg} -gt 50 ]; then
+    echo "Error: Commit message exceeds 50 characters."
+    exit 1
 fi
+
+# Check if the commit message matches the required format
+if [[ ! $commit_msg =~ $msg_re ]]; then
+    echo "Invalid commit message format. Please use the correct format:"
+    echo ""
+    echo "feat:        A new feature"
+    echo "fix:         A bug fix"
+    echo "docs:        Documentation changes"
+    echo "style:       Code style changes (white-space, formatting, etc.)"
+    echo "refactor:    Code refactoring (neither new feature nor bug fix)"
+    echo "perf:        Performance improvements"
+    echo "test:        Adding or updating tests"
+    echo "chore:       Changes to build process or auxiliary tools"
+    echo "workflow:    Changes in the CI/CD pipeline or workflow"
+    echo ""
+    echo "For more details, see the commit message guidelines:"
+    echo "https://www.conventionalcommits.org/en/v1.0.0/"
+    # Exit with an error code
+    exit 1
+fi
+
+# If everything is fine
+echo "Commit message is valid."
