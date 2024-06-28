@@ -1,1 +1,41 @@
+#!/bin/sh
+
+# Define a separator for better log visibility
+separator="============================"
+
+echo "$separator"
+echo "Running Prettier for code formatting..."
 npm run format
+if [ $? -ne 0 ]; then
+    echo "Error: Code formatting failed."
+    exit 1
+fi
+
+echo "$separator"
+echo "Running ESLint for code linting..."
+# Run ESLint without the --fix option
+npm run lint
+if [ $? -ne 0 ]; then
+    echo "Error: Linting failed. Please fix the issues before committing."
+    exit 1
+fi
+
+echo "$separator"
+echo "Running unit tests with Vitest..."
+
+# Run unit tests with coverage and capture output
+coverage_output=$(npm run coverage)
+
+# Print coverage report
+echo "$separator"
+echo "Unit test coverage report:"
+echo "$coverage_output"
+
+# Check if tests failed
+if echo "$coverage_output" | grep -q "FAILED TESTS"; then
+    echo "Error: Unit tests failed. Please fix the issues before committing."
+    exit 1
+fi
+
+echo "$separator"
+echo "All pre-commit checks passed successfully!"
