@@ -10,8 +10,8 @@ msg_re="^(feat|fix|docs|style|refactor|perf|test|workflow|build|ci|chore|release
 echo "Current commit message: \"$commit_msg\""
 
 # Check the length of the commit message
-if [ ${#commit_msg} -gt 50 ]; then
-    echo "Error: Commit message exceeds 50 characters."
+if [ ${#commit_msg} -gt 60 ]; then
+    echo "Error: Commit message exceeds 60 characters."
     exit 1
 fi
 
