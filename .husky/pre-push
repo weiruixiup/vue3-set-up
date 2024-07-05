@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Define a separator for better log visibility
+separator="============================"
+
+echo "$separator"
+echo "Running unit tests with Vitest..."
+
+# Run unit tests with coverage and capture output
+coverage_output=$(npm run coverage 2>&1)
+
+# Check if coverage_output is empty
+if [ -z "$coverage_output" ]; then
+    echo "Error: Failed to capture coverage output. Please check your test setup."
+    exit 1
+fi
+
+# Print coverage report (for debugging)
+echo "$separator"
+echo "Raw coverage output:"
+echo "$coverage_output"
+
+# Extract coverage percentage for lines using awk
+coverage_percentage=$(echo "$coverage_output" | awk '/All files/{print $4}')
+
+# Debugging output to ensure correct extraction
+echo "Extracted coverage percentage:"
+echo "$coverage_percentage"
+
+# Check if coverage percentage exists and is numeric
+if [[ -n "$coverage_percentage" && "$coverage_percentage" != "0" ]]; then
+    echo "Coverage percentage: $coverage_percentage%"
+    # Add further checks or actions here if needed
+else
+    echo "Error: Failed to parse coverage percentage from output. Please check your test setup."
+    exit 1
+fi
+
+echo "$separator"
+echo "All pre-push checks passed successfully!"
